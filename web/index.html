@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>PAC-Überwachungssystem</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/PAC.jpg">
+
+</head>
+<body>
+    <style>
+      .rotate {
+        animation: rotation 2s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+      @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
+      
+      .rotate2 {
+        animation: rotation2 2s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+      @keyframes rotation2 {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(-359deg);
+        }
+      }
+
+      .numberCircle {
+          border-radius: 20%;
+          width: 36px;
+          height: 36px;
+          padding: 10px;
+          padding-left: 32px;
+          padding-right: 30px;
+
+          border: 3px dashed #444;
+          color: #efa537;
+          text-align: center;
+
+          background-color: #fff;
+      }
+    </style>
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="seven-twelves column" style="margin-top: 5%; align-content: center;">
+        <div style="text-align: center;">
+          <h4> <img src="images/PAC.jpg" class="rotate" style="max-height: 30px; max-width:30px;"> PAC-Überwachungssystem  <img src="images/PAC.jpg" class="rotate2" style="max-height: 30px; max-width:30px;"> </h4>
+        </div>
+        
+        <p>Derzeit befinden sich</p> <br> <div style="text-align: center;"> <span class="numberCircle" style="color: #222; font-size: 75px; font-family:serif;" id="pac_num"> 0 </span> </div> <br> <p> PAC Geräte von Dräger in der Umgebung, wie's aussieht. Also, glauben wir zumindest. Ich würde an Ihrer Stelle nochmal manuell nachzählen. Aber die Größenordnung sollte ungefähr stimmen.</p>
+        
+        <p>OK, dann werfen wir doch mal einen Blick auf die Gasmessgeräte, die wir finden konnten:</p>
+
+        <div style="margin-bottom: 100px;">
+          <table id="device_list" style="width:100%;">
+  
+  
+          </table>
+  
+        </div>
+      </div>
+
+      
+
+      
+    </div>
+  </div>
+
+
+  <script>
+    const Webserver_URL = "http://192.168.4.1/info";
+
+    var counter = document.getElementById("pac_num");
+    var device_list = document.getElementById("device_list");
+    
+    const status_lookup = {0: "Einsatzbereit", 1: "Alarm!", 2:"Gasalarm!", 3:"Error", 4:"Kalibration nötig.", 5:"Bump-Test nötig."};
+
+    function update_counter() {
+
+      var result;
+
+      function handle(data) {
+        //var result = JSON.parse(data);
+
+        // dummy result:
+        var results = [{mac: "00:25:9C", "pn": "4567882", "ds": "0", "sn":"RTHL-0474"},
+                       {mac: "28:71:71", "pn": "9333427", "ds": "4", "sn":"LMMM-51330"},
+                       {mac: "68:7F:74", "pn": "9905427", "ds": "1", "sn":"VVGL-56474"}]
+        
+        var i = 0;
+
+        // clear children of device list and repopulate with new data
+        device_list.innerHTML = "";
+
+        var tr = document.createElement("tr");
+        var th = document.createElement("th");
+        th.innerHTML = "";
+        tr.appendChild(th);
+        var th = document.createElement("th");
+        th.innerHTML = "     Mac-Adresse";
+        tr.appendChild(th);
+        var th = document.createElement("th");
+        th.innerHTML = "Seriennummer";
+        tr.appendChild(th);
+        var th = document.createElement("th");
+        th.innerHTML = "Gerätenummer";
+        tr.appendChild(th);
+        var th = document.createElement("th");
+        th.innerHTML = "Gerätestatus      ";
+        tr.appendChild(th);
+
+        device_list.appendChild(tr);
+
+
+        for (result in results) {
+          var li = document.createElement("li");
+          console.log(results[0]);
+
+          var tr = document.createElement("tr");
+          var td = document.createElement("td");
+          td.innerHTML = (i+1).toString().concat(".");
+          tr.appendChild(td);
+          var td = document.createElement("td");
+          td.innerHTML = results[i]["mac"];
+          tr.appendChild(td);
+          var td = document.createElement("td");
+          td.innerHTML = results[i]["sn"];
+          tr.appendChild(td);
+          var td = document.createElement("td");
+          td.innerHTML = results[i]["pn"];
+          tr.appendChild(td);
+          var td = document.createElement("td");
+          td.innerHTML = status_lookup[results[i]["ds"]];
+          if (results[i]["ds"] == "1" || results[i]["ds"] == "2" || results[i]["ds"] == "3") {
+            td.style.backgroundColor = "#f79974";
+          }
+
+          else if (results[i]["ds"] == "0") {
+            td.style.backgroundColor = "#dff774";
+          }
+
+          else if (results[i]["ds"] == "4" || results[i]["ds"] == "4") {
+            td.style.backgroundColor = "#fce167";
+          }
+
+          tr.appendChild(td);
+
+        
+          device_list.appendChild(tr);
+
+          i++;
+        }
+        counter.innerHTML = i.toString();
+      }
+
+      handle(1); // DEBUG
+
+      return;
+
+      fetch(Webserver_URL)
+      .then(response => response.json())
+      .then(data => handle(data));
+
+      // update content of counter
+
+      // counter.innerHTML = result.toString();
+
+    }
+
+    setInterval(update_counter, 2000);
+  </script>
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+</body>
+</html>
