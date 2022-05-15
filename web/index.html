@@ -166,7 +166,7 @@
           td.innerHTML = results[i]["pn"];
           tr.appendChild(td);
           var td = document.createElement("td");
-          td.innerHTML = results[i]["ds"];
+          td.innerHTML = status_lookup[results[i]["ds"]];
           if (results[i]["ds"] == "0" || results[i]["ds"] == "2" || results[i]["ds"] == "3") {
             td.style.backgroundColor = "#f79974";
           }
