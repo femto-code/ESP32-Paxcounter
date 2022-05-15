@@ -107,19 +107,20 @@
     var counter = document.getElementById("pac_num");
     var device_list = document.getElementById("device_list");
     
-    const status_lookup = {0: "Einsatzbereit", 1: "Alarm!", 2:"Gasalarm!", 3:"Error", 4:"Kalibration nötig.", 5:"Bump-Test nötig."};
+    const status_lookup = {1: "Einsatzbereit", 0: "Alarm!", 2:"Gasalarm!", 3:"Error", 4:"Kalibration nötig.", 5:"Bump-Test nötig."};
 
     function update_counter() {
 
       var result;
 
       function handle(data) {
-        //var result = JSON.parse(data);
+
+        var results = JSON.parse(data);
 
         // dummy result:
-        var results = [{mac: "00:25:9C", "pn": "4567882", "ds": "0", "sn":"RTHL-0474"},
-                       {mac: "28:71:71", "pn": "9333427", "ds": "4", "sn":"LMMM-51330"},
-                       {mac: "68:7F:74", "pn": "9905427", "ds": "1", "sn":"VVGL-56474"}]
+        //var results = [{mac: "00:25:9C", "pn": "4567882", "ds": "0", "sn":"RTHL-0474"},
+                      //  {mac: "28:71:71", "pn": "9333427", "ds": "4", "sn":"LMMM-51330"},
+                      //  {mac: "68:7F:74", "pn": "9905427", "ds": "1", "sn":"VVGL-56474"}]
         
         var i = 0;
 
@@ -165,11 +166,11 @@
           tr.appendChild(td);
           var td = document.createElement("td");
           td.innerHTML = status_lookup[results[i]["ds"]];
-          if (results[i]["ds"] == "1" || results[i]["ds"] == "2" || results[i]["ds"] == "3") {
+          if (results[i]["ds"] == "0" || results[i]["ds"] == "2" || results[i]["ds"] == "3") {
             td.style.backgroundColor = "#f79974";
           }
 
-          else if (results[i]["ds"] == "0") {
+          else if (results[i]["ds"] == "1") {
             td.style.backgroundColor = "#dff774";
           }
 
@@ -189,7 +190,7 @@
 
       handle(1); // DEBUG
 
-      return;
+      //return;
 
       fetch(Webserver_URL)
       .then(response => response.json())
