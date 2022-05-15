@@ -103,7 +103,12 @@
     var counter = document.getElementById("pac_num");
     var device_list = document.getElementById("device_list");
     
-    const status_lookup = {1: "Einsatzbereit", 0: "Alarm!", 2:"Gasalarm!", 3:"Error", 4:"Kalibration nötig.", 5:"Bump-Test nötig."};
+    const status_lookup = {0: "Alarm!", 
+                           1: "Einsatzbereit",  
+                           2:"Geräte- oder Gasalarm!", 
+                           3:"Error", 
+                           4:"Kalibration nötig.", 
+                           5:"Bump-Test nötig."};
 
     function update_counter() {
 
@@ -161,7 +166,7 @@
           td.innerHTML = results[i]["pn"];
           tr.appendChild(td);
           var td = document.createElement("td");
-          td.innerHTML = status_lookup[results[i]["ds"]];
+          td.innerHTML = results[i]["ds"];
           if (results[i]["ds"] == "0" || results[i]["ds"] == "2" || results[i]["ds"] == "3") {
             td.style.backgroundColor = "#f79974";
           }
@@ -170,7 +175,7 @@
             td.style.backgroundColor = "#dff774";
           }
 
-          else if (results[i]["ds"] == "4" || results[i]["ds"] == "4") {
+          else if (results[i]["ds"] == "4" || results[i]["ds"] == "5") {
             td.style.backgroundColor = "#fce167";
           }
 
@@ -184,18 +189,11 @@
         counter.innerHTML = i.toString();
       }
 
-      handle(1); // DEBUG
-
-      //return;
 
       fetch(Webserver_URL)
       .then(response => response.text()).then(function (text) {
           return text.replace("xV���", "");
         }).then(data => handle(data));
-
-      // update content of counter
-
-      // counter.innerHTML = result.toString();
 
     }
 
