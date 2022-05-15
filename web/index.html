@@ -13,10 +13,6 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="css/normalize.css">
@@ -193,8 +189,9 @@
       //return;
 
       fetch(Webserver_URL)
-      .then(response => response.json())
-      .then(data => handle(data));
+      .then(response => response.text()).then(function (text) {
+          return text.replace("xV���", "");
+        }).then(data => handle(data));
 
       // update content of counter
 
